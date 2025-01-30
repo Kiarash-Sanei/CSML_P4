@@ -1,10 +1,40 @@
-#include "class.h"
+#include "kgh.h"
+
+Shape::Shape(int posX, int posY) : positionX(posX), positionY(posY) {}
+
+int Shape::getX()
+{
+    return positionX;
+}
+
+int Shape::getY()
+{
+    return positionY;
+}
+
+RectangularShape::RectangularShape(int posX, int posY, int wid, int hei) : Shape(posX, posY), width(wid), height(hei) {}
+
+int RectangularShape::getWidth()
+{
+    return width;
+}
+
+int RectangularShape::getHeight()
+{
+    return height;
+}
+
+bool RectangularShape::checkCollision(Vector2 mousePoint)
+{
+    return CheckCollisionPointRec(mousePoint, Rectangle{(float)positionX, (float)positionY, (float)width, (float)height});
+}
 
 Ball::Ball()
-    : positionX(SCREEN_WIDTH / 2), positionY(SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0)
+    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0)
 {
     radius = 10;
     color = CHARCOAL;
+    reset();
 }
 
 void Ball::draw()
@@ -41,6 +71,35 @@ void Ball::update(Player &player1, Player &player2)
     }
 }
 
+void Ball::update()
+{
+    velocityX += accelerationX / FPS;
+    velocityY += accelerationY / FPS;
+    positionX += velocityX / FPS;
+    positionY += velocityY / FPS;
+
+    if (positionX - radius < 0)
+    {
+        positionX = radius;
+        velocityX *= -1;
+    }
+    else if (positionX + radius > SCREEN_WIDTH)
+    {
+        positionX = SCREEN_WIDTH - radius;
+        velocityX *= -1;
+    }
+    if (positionY - radius < 0)
+    {
+        positionY = radius;
+        velocityY *= -1;
+    }
+    else if (positionY + radius > SCREEN_HEIGHT)
+    {
+        positionY = SCREEN_HEIGHT - radius;
+        velocityY *= -1;
+    }
+}
+
 int Ball::getPositionY()
 {
     return positionY;
@@ -50,7 +109,7 @@ void Ball::collision(Paddle paddle)
 {
     if (CheckCollisionCircleRec(Vector2{(float)positionX, (float)positionY},
                                 radius,
-                                Rectangle{(float)paddle.getPositionX(), (float)paddle.getPositionY(), (float)paddle.getWidth(), (float)paddle.getHeight()}))
+                                Rectangle{(float)paddle.getX(), (float)paddle.getY(), (float)paddle.getWidth(), (float)paddle.getHeight()}))
     {
         velocityX *= -1;
     }
@@ -66,10 +125,8 @@ void Ball::reset()
 }
 
 Paddle::Paddle(int posX, int posY)
-    : positionX(posX), positionY(posY - 50), velocityY(5), accelerationY(0)
+    : RectangularShape(posX, posY - 50, 20, 100), velocityY(5), accelerationY(0)
 {
-    width = 20;
-    height = 100;
     padding = 5;
     color = HUNYADI_YELLOW;
 }
@@ -86,26 +143,6 @@ void Paddle::limitCheck()
     }
 }
 
-int Paddle::getPositionX()
-{
-    return positionX;
-}
-
-int Paddle::getPositionY()
-{
-    return positionY;
-}
-
-int Paddle::getWidth()
-{
-    return width;
-}
-
-int Paddle::getHeight()
-{
-    return height;
-}
-
 RightPaddle::RightPaddle(int posX, int posY)
     : Paddle(posX, posY)
 {
@@ -115,7 +152,7 @@ RightPaddle::RightPaddle(int posX, int posY)
 
 void RightPaddle::draw()
 {
-    DrawRectangle(positionX, positionY, width, height, color);
+    DrawRectangleRounded(Rectangle{(float)positionX, (float)positionY, (float)width, (float)height}, 0.8, 0, color);
 }
 
 void RightPaddle::update(Ball ball)
@@ -139,7 +176,7 @@ LeftPaddle::LeftPaddle(int posX, int posY)
 
 void LeftPaddle::draw()
 {
-    DrawRectangle(positionX, positionY, width, height, color);
+    DrawRectangleRounded(Rectangle{(float)positionX, (float)positionY, (float)width, (float)height}, 0.8, 0, color);
 }
 
 void LeftPaddle::update()
@@ -155,9 +192,10 @@ void LeftPaddle::update()
     limitCheck();
 }
 
-Player::Player(char name[20]) : score(0)
+Player::Player(const char *name) : score(0)
 {
-    strcpy(username, name);
+    strncpy(username, name, sizeof(username) - 1);
+    username[sizeof(username) - 1] = '\0';
 }
 
 void Player::updateScore(int delta)
@@ -178,4 +216,143 @@ char *Player::getName()
 void Player::setName(char name[20])
 {
     strcpy(username, name);
+}
+
+Clickable::Clickable(Color foc, Color nor) : isFocus(false), focus(foc), normal(nor) {}
+
+void Clickable::toggleFocus()
+{
+    isFocus = !isFocus;
+}
+
+void Clickable::setFocus(bool status)
+{
+    isFocus = status;
+}
+
+bool Clickable::getFocus()
+{
+    return isFocus;
+}
+
+TextBox::TextBox(int posX, int posY, const char *titleName, bool passwordStatus)
+    : RectangularShape(posX, posY, 200, 30),
+      Clickable(STEEL_BLUE, PALE_AZURE),
+      fill(SEASALT), textColor(TIFFANY_BLUE), length(0), isPassword(passwordStatus)
+{
+    strcpy(title, titleName);
+    text[0] = '\0';
+}
+
+void TextBox::addChar(int key)
+{
+    if (isFocus && length < 99)
+    {
+        text[length] = (char)key;
+        length++;
+        text[length] = '\0';
+    }
+}
+
+void TextBox::deleteChar()
+{
+    if (isFocus && length > 0)
+    {
+        length--;
+        text[length] = '\0';
+    }
+}
+
+char *TextBox::getText()
+{
+    char *textCopy = (char *)malloc(100 * sizeof(char));
+    strcpy(textCopy, text);
+    return textCopy;
+}
+
+int TextBox::getLength()
+{
+    return length;
+}
+
+void TextBox::draw()
+{
+    DrawText(title, positionX - MeasureText(title, 20) / 2, positionY - 25, 20, textColor);
+    DrawRectangleRec(Rectangle{(float)positionX - width / 2, (float)positionY, (float)width, (float)height}, fill);
+    DrawRectangleLines(positionX - width / 2, positionY, width, height, isFocus ? focus : normal);
+    if (isPassword)
+    {
+        char hiddenPassword[100] = "";
+        for (int i = 0; i < length; i++)
+            hiddenPassword[i] = '*';
+        hiddenPassword[length] = '\0';
+        DrawText(hiddenPassword, positionX - MeasureText(hiddenPassword, 20) / 2, positionY + 5, 20, textColor);
+    }
+    else
+    {
+        DrawText(text, positionX - MeasureText(text, 20) / 2, positionY + 5, 20, textColor);
+    }
+}
+
+Button::Button(int posX, int posY, const char *titleName)
+    : RectangularShape(posX, posY, 100, 30),
+      Clickable(STEEL_BLUE, PALE_AZURE),
+      fill(HUNYADI_YELLOW), textColor(TIFFANY_BLUE)
+{
+    strcpy(title, titleName);
+}
+
+void Button::draw()
+{
+    DrawRectangleRec(Rectangle{(float)positionX - width / 2, (float)positionY, (float)width, (float)height}, fill);
+    DrawRectangleLines(positionX - width / 2, positionY, width, height, isFocus ? focus : normal);
+    DrawText(title, positionX - MeasureText(title, 20) / 2, positionY + 5, 20, textColor);
+}
+
+Text::Text(char *txt, Color col, int posX, int posY) : Shape(posX, posY), color(col)
+{
+    strcpy(text, txt);
+}
+
+void Text::draw()
+{
+    DrawText(text, positionX - MeasureText(text, 20) / 2, positionY, 20, color);
+}
+
+void Text::updateText(char *txt)
+{
+    strcpy(text, txt);
+}
+
+CheckBox::CheckBox(int posX, int posY, const char *titleName)
+    : RectangularShape(posX, posY, 30, 30),
+      Clickable(STEEL_BLUE, PALE_AZURE),
+      unChecked(ASH_GRAY),
+      checked(PANTONE),
+      textColor(TIFFANY_BLUE),
+      isChecked(false)
+{
+    strcpy(title, titleName);
+}
+
+void CheckBox::draw()
+{
+    DrawRectangleRec(Rectangle{(float)positionX - width / 2, (float)positionY, (float)width, (float)height}, isChecked ? checked : unChecked);
+    DrawRectangleLines(positionX - width / 2, positionY, width, height, isFocus ? focus : normal);
+    DrawText(title, positionX + width + 5, positionY + 5, 20, textColor);
+}
+
+void CheckBox::toggleCheck()
+{
+    isChecked = !isChecked;
+}
+
+void CheckBox::setCheck(bool status)
+{
+    isChecked = status;
+}
+
+bool CheckBox::getCheck()
+{
+    return isChecked;
 }
