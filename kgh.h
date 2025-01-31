@@ -180,6 +180,14 @@ public:
     bool getCheck();
 };
 
+typedef struct GameMode
+{
+    int numberOfPlayer;
+    int path;
+    int difficulty;
+} GameMode;
+
 bool checkLogin(TextBox *username, TextBox *password, Button *login);
 bool loginMenu(Player *player);
-bool mainMenu();
+bool mainMenu(GameMode* gameMode);
+bool game(Player *player1, Player *player2, GameMode* gameMode);

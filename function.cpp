@@ -111,23 +111,27 @@ bool loginMenu(Player *player)
     return loginStatus;
 }
 
-bool checkStart(CheckBox *multiPlayer, CheckBox *singlePlayer, CheckBox *regular, CheckBox *sin, CheckBox *curve)
+bool mainMenu(GameMode *gameMode)
 {
-    return (multiPlayer->getCheck() || singlePlayer->getCheck()) && (regular->getCheck() || sin->getCheck() || curve->getCheck());
-}
+    Text title("MAIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 350);
+    Text guide("Choose the game mode:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 300);
+    Text ballPath("Choose the ball's path:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100);
+    Text difficulty("Choose game's difficulty:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100);
 
-bool mainMenu()
-{
-    Text title("MAIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 200);
-    Text guide("Choose the game mode:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100);
-    Text ballPath("Choose the ball's path:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100);
+    CheckBox singlePlayer(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, "SINGLEPLAYER");
+    CheckBox multiPlayer(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2 - 200, "MULTIPLAYER");
+    singlePlayer.setCheck(true);
+    singlePlayer.setFocus(true);
 
-    CheckBox multiPlayer(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2, "MULTIPLAYER");
-    CheckBox singlePlayer(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2, "SINGLEPLAYER");
+    CheckBox regular(SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2, "REGULAR");
+    CheckBox sin(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "SIN");
+    CheckBox curve(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT / 2, "CURVE");
+    regular.setCheck(true);
 
-    CheckBox regular(SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 + 200, "REGULAR");
-    CheckBox sin(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 200, "SIN");
-    CheckBox curve(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT / 2 + 200, "CURVE");
+    CheckBox easy(SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 + 200, "EASY");
+    CheckBox medium(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 200, "MEDIUM");
+    CheckBox hard(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT / 2 + 200, "HARD");
+    easy.setCheck(true);
 
     Button startGame(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 300, "Start");
 
@@ -137,14 +141,14 @@ bool mainMenu()
     {
         if (IsKeyPressed(KEY_TAB))
         {
-            if (multiPlayer.getFocus())
-            {
-                multiPlayer.setFocus(false);
-                singlePlayer.setFocus(true);
-            }
-            else if (singlePlayer.getFocus())
+            if (singlePlayer.getFocus())
             {
                 singlePlayer.setFocus(false);
+                multiPlayer.setFocus(true);
+            }
+            else if (multiPlayer.getFocus())
+            {
+                multiPlayer.setFocus(false);
                 regular.setFocus(true);
             }
             else if (regular.getFocus())
@@ -160,30 +164,45 @@ bool mainMenu()
             else if (curve.getFocus())
             {
                 curve.setFocus(false);
+                easy.setFocus(true);
+            }
+            else if (easy.getFocus())
+            {
+                easy.setFocus(false);
+                medium.setFocus(true);
+            }
+            else if (medium.getFocus())
+            {
+                medium.setFocus(false);
+                hard.setFocus(true);
+            }
+            else if (hard.getFocus())
+            {
+                hard.setFocus(false);
                 startGame.setFocus(true);
             }
             else if (startGame.getFocus())
             {
                 startGame.setFocus(false);
-                multiPlayer.setFocus(true);
+                singlePlayer.setFocus(true);
             }
         }
         if (IsKeyPressed(KEY_ENTER))
         {
-            if (multiPlayer.getFocus())
-            {
-                multiPlayer.toggleCheck();
-                if (multiPlayer.getCheck())
-                {
-                    singlePlayer.setCheck(false);
-                }
-            }
-            else if (singlePlayer.getFocus())
+            if (singlePlayer.getFocus())
             {
                 singlePlayer.toggleCheck();
                 if (singlePlayer.getCheck())
                 {
                     multiPlayer.setCheck(false);
+                }
+            }
+            else if (multiPlayer.getFocus())
+            {
+                multiPlayer.toggleCheck();
+                if (multiPlayer.getCheck())
+                {
+                    singlePlayer.setCheck(false);
                 }
             }
             else if (regular.getFocus())
@@ -213,74 +232,153 @@ bool mainMenu()
                     sin.setCheck(false);
                 }
             }
+            else if (easy.getFocus())
+            {
+                easy.toggleCheck();
+                if (easy.getCheck())
+                {
+                    medium.setCheck(false);
+                    hard.setCheck(false);
+                }
+            }
+            else if (medium.getFocus())
+            {
+                medium.toggleCheck();
+                if (medium.getCheck())
+                {
+                    easy.setCheck(false);
+                    hard.setCheck(false);
+                }
+            }
+            else if (hard.getFocus())
+            {
+                hard.toggleCheck();
+                if (hard.getCheck())
+                {
+                    easy.setCheck(false);
+                    medium.setCheck(false);
+                }
+            }
             else if (startGame.getFocus())
             {
-                start = checkStart(&multiPlayer, &singlePlayer, &regular, &sin, &curve);
-                if (!start)
-                {
-                    startGame.setFocus(false);
-                    multiPlayer.setFocus(true);
-                }
+                start = true;
             }
         }
 
         Vector2 mousePoint = GetMousePosition();
         if (startGame.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            start = checkStart(&multiPlayer, &singlePlayer, &regular, &sin, &curve);
-        }
-        else if (multiPlayer.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            multiPlayer.setFocus(true);
-            multiPlayer.setCheck(true);
-            singlePlayer.setFocus(false);
-            singlePlayer.setCheck(false);
-            regular.setFocus(false);
-            sin.setFocus(false);
-            curve.setFocus(false);
+            start = true;
         }
         else if (singlePlayer.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            multiPlayer.setFocus(false);
-            multiPlayer.setCheck(false);
             singlePlayer.setFocus(true);
             singlePlayer.setCheck(true);
+            multiPlayer.setFocus(false);
+            multiPlayer.setCheck(false);
             regular.setFocus(false);
             sin.setFocus(false);
             curve.setFocus(false);
+            easy.setFocus(false);
+            medium.setFocus(false);
+            hard.setFocus(false);
+        }
+        else if (multiPlayer.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            singlePlayer.setFocus(false);
+            singlePlayer.setCheck(false);
+            multiPlayer.setFocus(true);
+            multiPlayer.setCheck(true);
+            regular.setFocus(false);
+            sin.setFocus(false);
+            curve.setFocus(false);
+            easy.setFocus(false);
+            medium.setFocus(false);
+            hard.setFocus(false);
         }
         else if (regular.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            multiPlayer.setFocus(false);
             singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
             regular.setFocus(true);
             regular.setCheck(true);
             sin.setFocus(false);
             sin.setCheck(false);
             curve.setFocus(false);
             curve.setCheck(false);
+            easy.setFocus(false);
+            medium.setFocus(false);
+            hard.setFocus(false);
         }
         else if (sin.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            multiPlayer.setFocus(false);
             singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
             regular.setFocus(false);
             regular.setCheck(false);
             sin.setFocus(true);
             sin.setCheck(true);
             curve.setFocus(false);
             curve.setCheck(false);
+            easy.setFocus(false);
+            medium.setFocus(false);
+            hard.setFocus(false);
         }
         else if (curve.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            multiPlayer.setFocus(false);
             singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
             regular.setFocus(false);
             regular.setCheck(false);
             sin.setFocus(false);
             sin.setCheck(false);
             curve.setFocus(true);
             curve.setCheck(true);
+            easy.setFocus(false);
+            medium.setFocus(false);
+            hard.setFocus(false);
+        }
+        else if (easy.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
+            regular.setFocus(false);
+            sin.setFocus(false);
+            curve.setFocus(false);
+            easy.setFocus(true);
+            easy.setCheck(true);
+            medium.setFocus(false);
+            medium.setCheck(false);
+            hard.setFocus(false);
+            hard.setCheck(false);
+        }
+        else if (medium.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
+            regular.setFocus(false);
+            sin.setFocus(false);
+            curve.setFocus(false);
+            easy.setFocus(false);
+            easy.setCheck(false);
+            medium.setFocus(true);
+            medium.setCheck(true);
+            hard.setFocus(false);
+            hard.setCheck(false);
+        }
+        else if (hard.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
+            regular.setFocus(false);
+            sin.setFocus(false);
+            curve.setFocus(false);
+            easy.setFocus(false);
+            easy.setCheck(false);
+            medium.setFocus(false);
+            medium.setCheck(false);
+            hard.setFocus(true);
+            hard.setCheck(true);
         }
 
         BeginDrawing();
@@ -289,15 +387,70 @@ bool mainMenu()
         title.draw();
         guide.draw();
         ballPath.draw();
-        multiPlayer.draw();
+        difficulty.draw();
         singlePlayer.draw();
+        multiPlayer.draw();
         regular.draw();
         sin.draw();
         curve.draw();
+        easy.draw();
+        medium.draw();
+        hard.draw();
         startGame.draw();
-        
+
         EndDrawing();
     }
 
+    if (multiPlayer.getCheck())
+    {
+        gameMode->numberOfPlayer = 2;
+    }
+
+    if (sin.getCheck())
+    {
+        gameMode->path = 2;
+    }
+    else
+    {
+        gameMode->path = 3;
+    }
+
+    if (medium.getCheck())
+    {
+        gameMode->difficulty = 2;
+    }
+    else
+    {
+        gameMode->difficulty = 3;
+    }
+
     return singlePlayer.getCheck();
+}
+
+bool game(Player *player1, Player *player2, GameMode *gameMode)
+{
+    Ball ball;
+    LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
+    RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2);
+
+    while (!WindowShouldClose())
+    {
+        ball.update(*player1, *player2);
+        leftPaddle.update();
+        rightPaddle.update(ball);
+        ball.collision(leftPaddle);
+        ball.collision(rightPaddle);
+
+        BeginDrawing();
+        ClearBackground(CAROLINA_BLUE);
+        DrawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT, PANTONE);
+        ball.draw();
+        leftPaddle.draw();
+        rightPaddle.draw();
+        DrawText(player1->getName(), 10, 10, 20, LAPIS_LAZULI);
+        DrawText(player2->getName(), SCREEN_WIDTH - 100, 10, 20, LAPIS_LAZULI);
+        DrawText(TextFormat("%i", player1->getScore()), 10, 40, 20, LAPIS_LAZULI);
+        DrawText(TextFormat("%i", player2->getScore()), SCREEN_WIDTH - 100, 40, 20, LAPIS_LAZULI);
+        EndDrawing();
+    }
 }
