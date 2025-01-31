@@ -5,28 +5,32 @@ int main()
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_NAME);
     SetTargetFPS(FPS);
 
-    GameMode gameMode;
-    gameMode.numberOfPlayer = 1;
-    gameMode.path = 1;
-    gameMode.difficulty = 1;
+    GameMode gameMode = {
+        .numberOfPlayer = 1,
+        .path = 1,
+        .difficulty = 1};
 
-    Player player1("");
-    bool loginStatus = loginMenu(&player1);
-    bool start;
+    Player player1("Player1");
+    Player player2("AI");
+
+    bool loginStatus = false;
+    bool start = false;
+    loginStatus = loginMenu(&player1);
     if (loginStatus)
     {
         start = mainMenu(&gameMode);
+
+        if (!start && gameMode.numberOfPlayer == 2)
+        {
+            loginStatus = loginMenu(&player2);
+        }
     }
 
-    Player player2("AI");
-    if (!start)
+    if (loginStatus)
     {
-        loginStatus = loginMenu(&player2);
+        game(&player1, &player2, &gameMode);
     }
-
-    game(&player1, &player2, &gameMode);
 
     CloseWindow();
-
     return 0;
 }

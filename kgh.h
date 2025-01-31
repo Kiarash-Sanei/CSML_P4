@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <math.h>
 
 #define CHARCOAL {47, 72, 88, 255}
 #define LAPIS_LAZULI {51, 101, 138, 255}
@@ -18,6 +18,13 @@
 #define SCREEN_HEIGHT 800
 #define GAME_NAME "PONG"
 #define FPS 60
+
+typedef struct GameMode
+{
+    int numberOfPlayer;
+    int path;
+    int difficulty;
+} GameMode;
 
 class Shape
 {
@@ -79,11 +86,13 @@ private:
     int accelerationY;
     float radius;
     Color color;
+    GameMode gameMode;
 
 public:
+    Ball(GameMode gM);
     Ball();
     void draw();
-    void update(Player &player1, Player &player2);
+    void update(Player *player1, Player *player2, double time);
     void update();
     int getPositionY();
     void collision(Paddle paddle);
@@ -158,7 +167,7 @@ private:
     Color color;
 
 public:
-    Text(char *txt, Color col, int posX, int posY);
+    Text(const char *txt, Color col, int posX, int posY);
     void draw();
     void updateText(char *txt);
 };
@@ -180,14 +189,10 @@ public:
     bool getCheck();
 };
 
-typedef struct GameMode
-{
-    int numberOfPlayer;
-    int path;
-    int difficulty;
-} GameMode;
-
 bool checkLogin(TextBox *username, TextBox *password, Button *login);
 bool loginMenu(Player *player);
-bool mainMenu(GameMode* gameMode);
-bool game(Player *player1, Player *player2, GameMode* gameMode);
+bool mainMenu(GameMode *gameMode);
+bool game(Player *player1, Player *player2, GameMode *gameMode);
+float regularPath(int velocity);
+float sinPath(int velocity, double time);
+float curvePath(int positionX, int positionY);

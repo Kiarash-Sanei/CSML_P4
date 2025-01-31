@@ -29,9 +29,42 @@ bool RectangularShape::checkCollision(Vector2 mousePoint)
     return CheckCollisionPointRec(mousePoint, Rectangle{(float)positionX, (float)positionY, (float)width, (float)height});
 }
 
+Ball::Ball(GameMode gM)
+    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), gameMode(gM)
+{
+    switch (gM.difficulty)
+    {
+    case 1:
+        velocityX = 300;
+        velocityY = 300;
+        accelerationX = 20;
+        accelerationY = 20;
+        break;
+    case 2:
+        velocityX = 350;
+        velocityY = 350;
+        accelerationX = 30;
+        accelerationY = 30;
+        break;
+    case 3:
+        velocityX = 400;
+        velocityY = 400;
+        accelerationX = 40;
+        accelerationY = 40;
+        break;
+    default:
+        break;
+    }
+
+    radius = 10;
+    color = CHARCOAL;
+    reset();
+}
+
 Ball::Ball()
     : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0)
 {
+    gameMode.path = GetRandomValue(1, 3);
     radius = 10;
     color = CHARCOAL;
     reset();
@@ -42,21 +75,47 @@ void Ball::draw()
     DrawCircle(positionX, positionY, radius, color);
 }
 
-void Ball::update(Player &player1, Player &player2)
+void Ball::update(Player *player1, Player *player2, double time)
 {
     velocityX += accelerationX / FPS;
     velocityY += accelerationY / FPS;
-    positionX += velocityX / FPS;
-    positionY += velocityY / FPS;
+
+    float deltaX;
+    float deltaY;
+
+    switch (gameMode.path)
+    {
+    case 1:
+        deltaX = regularPath(velocityX);
+        deltaY = regularPath(velocityY);
+        break;
+
+    case 2:
+        deltaX = regularPath(velocityX);
+        deltaY = sinPath(velocityY, time);
+        break;
+
+    case 3:
+        accelerationY += curvePath(positionX, positionY);
+        deltaX = regularPath(velocityX);
+        deltaY = regularPath(velocityY);
+        break;
+
+    default:
+        break;
+    }
+
+    positionX += deltaX;
+    positionY += deltaY;
 
     if (positionX - radius < 0)
     {
-        player2.updateScore(1);
+        player2->updateScore(1);
         reset();
     }
     else if (positionX + radius > SCREEN_WIDTH)
     {
-        player1.updateScore(1);
+        player1->updateScore(1);
         reset();
     }
     if (positionY - radius < 0)
@@ -309,9 +368,10 @@ void Button::draw()
     DrawText(title, positionX - MeasureText(title, 20) / 2, positionY + 5, 20, textColor);
 }
 
-Text::Text(char *txt, Color col, int posX, int posY) : Shape(posX, posY), color(col)
+Text::Text(const char *txt, Color col, int posX, int posY) : Shape(posX, posY), color(col)
 {
-    strcpy(text, txt);
+    strncpy(text, txt, sizeof(text) - 1);
+    text[sizeof(text) - 1] = '\0';
 }
 
 void Text::draw()
@@ -321,7 +381,8 @@ void Text::draw()
 
 void Text::updateText(char *txt)
 {
-    strcpy(text, txt);
+    strncpy(text, txt, sizeof(text) - 1);
+    text[sizeof(text) - 1] = '\0';
 }
 
 CheckBox::CheckBox(int posX, int posY, const char *titleName)

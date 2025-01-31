@@ -406,11 +406,15 @@ bool mainMenu(GameMode *gameMode)
         gameMode->numberOfPlayer = 2;
     }
 
-    if (sin.getCheck())
+    if (regular.getCheck())
+    {
+        gameMode->path = 1;
+    }
+    else if (sin.getCheck())
     {
         gameMode->path = 2;
     }
-    else
+    else if (curve.getCheck())
     {
         gameMode->path = 3;
     }
@@ -429,13 +433,14 @@ bool mainMenu(GameMode *gameMode)
 
 bool game(Player *player1, Player *player2, GameMode *gameMode)
 {
-    Ball ball;
+    double time = 0;
+    Ball ball(*gameMode);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
     RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2);
 
     while (!WindowShouldClose())
     {
-        ball.update(*player1, *player2);
+        ball.update(player1, player2, time);
         leftPaddle.update();
         rightPaddle.update(ball);
         ball.collision(leftPaddle);
@@ -452,5 +457,37 @@ bool game(Player *player1, Player *player2, GameMode *gameMode)
         DrawText(TextFormat("%i", player1->getScore()), 10, 40, 20, LAPIS_LAZULI);
         DrawText(TextFormat("%i", player2->getScore()), SCREEN_WIDTH - 100, 40, 20, LAPIS_LAZULI);
         EndDrawing();
+        time++;
+    }
+
+    return true;
+}
+
+float regularPath(int velocity)
+{
+    return velocity / FPS;
+}
+
+float sinPath(int velocity, double time)
+{
+    const float frequency = 0.05f;
+    float baseMovement = velocity / FPS;
+    float sineComponent = sin(frequency * time);
+    return baseMovement * sineComponent;
+}
+
+float curvePath(int positionX, int positionY)
+{
+    const float constant = 1000;
+    positionX -= SCREEN_WIDTH / 2;
+    positionY -= SCREEN_HEIGHT / 2;
+    float norm = positionX * positionX + positionY * positionY;
+    if (norm < 25)
+    {
+        return 0;
+    }
+    else
+    {
+        return constant * positionY / norm;
     }
 }
