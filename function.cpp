@@ -111,6 +111,18 @@ bool loginMenu(Player *player)
     return loginStatus;
 }
 
+bool checkMainMenuSelections(CheckBox *singlePlayer, CheckBox *multiPlayer,
+                             CheckBox *regular, CheckBox *sin, CheckBox *curve,
+                             CheckBox *easy, CheckBox *medium, CheckBox *hard,
+                             CheckBox *cpp, CheckBox *assembly)
+{
+    bool hasGameMode = singlePlayer->getCheck() || multiPlayer->getCheck();
+    bool hasPath = regular->getCheck() || sin->getCheck() || curve->getCheck();
+    bool hasDifficulty = easy->getCheck() || medium->getCheck() || hard->getCheck();
+    bool hasLanguage = cpp->getCheck() || assembly->getCheck();
+    return hasGameMode && hasPath && hasDifficulty && hasLanguage;
+}
+
 bool mainMenu(GameMode *gameMode)
 {
     Text title("MAIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 375);
@@ -292,14 +304,20 @@ bool mainMenu(GameMode *gameMode)
             }
             else if (startGame.getFocus())
             {
-                start = true;
+                start = checkMainMenuSelections(&singlePlayer, &multiPlayer,
+                                                &regular, &sin, &curve,
+                                                &easy, &medium, &hard,
+                                                &cpp, &assembly);
             }
         }
 
         Vector2 mousePoint = GetMousePosition();
         if (startGame.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            start = true;
+            start = checkMainMenuSelections(&singlePlayer, &multiPlayer,
+                                            &regular, &sin, &curve,
+                                            &easy, &medium, &hard,
+                                            &cpp, &assembly);
         }
         else if (singlePlayer.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
@@ -426,7 +444,7 @@ bool mainMenu(GameMode *gameMode)
             assembly.setFocus(false);
             assembly.setCheck(false);
         }
-        else if (hard.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        else if (assembly.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             singlePlayer.setFocus(false);
             multiPlayer.setFocus(false);
@@ -490,7 +508,7 @@ bool mainMenu(GameMode *gameMode)
 
     if (assembly.getCheck())
     {
-        gameMode->program = Program::ASSEMBLY;
+        gameMode->program = Program::assembly;
     }
 
     return singlePlayer.getCheck();
@@ -526,12 +544,19 @@ bool game(Player *player1, Player *player2, GameMode *gameMode)
     return true;
 }
 
-float regularPath(int velocity)
+float regularPath(int velocity, GameMode *gameMode)
 {
-    return velocity / FPS;
+    if (gameMode->program == Program::cpp)
+    {
+        return velocity / FPS;
+    }
+    else
+    {
+        return R(velocity);
+    }
 }
 
-float sinPath(int velocity, double time)
+float sinPath(int velocity, double time, GameMode *gameMode)
 {
     const float frequency = 0.05f;
     float baseMovement = velocity / FPS;
@@ -539,7 +564,7 @@ float sinPath(int velocity, double time)
     return baseMovement * sineComponent;
 }
 
-float curvePath(int positionX, int positionY)
+float curvePath(int positionX, int positionY, GameMode *gameMode)
 {
     const float constant = 1000;
     positionX -= SCREEN_WIDTH / 2;

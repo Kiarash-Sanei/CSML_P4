@@ -142,19 +142,19 @@ void Ball::path()
     switch (gameMode.path)
     {
     case Path::regular:
-        deltaX = regularPath(velocityX);
-        deltaY = regularPath(velocityY);
+        deltaX = regularPath(velocityX, &gameMode);
+        deltaY = regularPath(velocityY, &gameMode);
         break;
 
     case Path::sine:
-        deltaX = regularPath(velocityX);
-        deltaY = sinPath(velocityY, time);
+        deltaX = regularPath(velocityX, &gameMode);
+        deltaY = sinPath(velocityY, time, &gameMode);
         break;
 
     case Path::curve:
-        accelerationY += curvePath(positionX, positionY);
-        deltaX = regularPath(velocityX);
-        deltaY = regularPath(velocityY);
+        accelerationY += curvePath(positionX, positionY, &gameMode);
+        deltaX = regularPath(velocityX, &gameMode);
+        deltaY = regularPath(velocityY, &gameMode);
         break;
 
     default:

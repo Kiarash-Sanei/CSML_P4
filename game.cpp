@@ -9,7 +9,7 @@ int main()
         .numberOfPlayer = 1,
         .path = Path::regular,
         .difficulty = Difficulty::Easy,
-        .program = Program::CPP};
+        .program = Program::cpp};
 
     Player player1("Player1");
     Player player2("AI");

@@ -19,6 +19,8 @@
 #define GAME_NAME "PONG"
 #define FPS 60
 
+extern "C" float R(int velocity);
+
 enum Path
 {
     regular,
@@ -35,8 +37,8 @@ enum Difficulty
 
 enum Program
 {
-    CPP,
-    ASSEMBLY
+    cpp,
+    assembly
 };
 
 typedef struct GameMode
@@ -215,9 +217,13 @@ public:
 };
 
 bool checkLogin(TextBox *username, TextBox *password, Button *login);
+bool checkMainMenuSelections(CheckBox *singlePlayer, CheckBox *multiPlayer,
+                             CheckBox *regular, CheckBox *sin, CheckBox *curve,
+                             CheckBox *easy, CheckBox *medium, CheckBox *hard,
+                             CheckBox *cpp, CheckBox *assembly);
 bool loginMenu(Player *player);
 bool mainMenu(GameMode *gameMode);
 bool game(Player *player1, Player *player2, GameMode *gameMode);
-float regularPath(int velocity);
-float sinPath(int velocity, double time);
-float curvePath(int positionX, int positionY);
+float regularPath(int velocity, GameMode *gameMode);
+float sinPath(int velocity, double time, GameMode *gameMode);
+float curvePath(int positionX, int positionY, GameMode *gameMode);
