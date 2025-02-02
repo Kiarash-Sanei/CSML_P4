@@ -34,19 +34,19 @@ Ball::Ball(GameMode gM)
 {
     switch (gM.difficulty)
     {
-    case 1:
+    case Difficulty::Easy:
         velocityX = 300;
         velocityY = 300;
         accelerationX = 20;
         accelerationY = 20;
         break;
-    case 2:
+    case Difficulty::Meduim:
         velocityX = 350;
         velocityY = 350;
         accelerationX = 30;
         accelerationY = 30;
         break;
-    case 3:
+    case Difficulty::Hard:
         velocityX = 400;
         velocityY = 400;
         accelerationX = 40;
@@ -66,8 +66,8 @@ Ball::Ball()
     : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0)
 {
     int random = GetRandomValue(1, 3);
-    gameMode.path = (random == 1 ? Path::regular : random == 2 ? Path::sine
-                                                               : Path::curve);
+    gameMode.path = (random == 1 ? Path::Regular : random == 2 ? Path::Sin
+                                                               : Path::Curve);
     time = 0;
     radius = 10;
     color = CHARCOAL;
@@ -141,17 +141,17 @@ void Ball::path()
 
     switch (gameMode.path)
     {
-    case Path::regular:
+    case Path::Regular:
         deltaX = regularPath(velocityX, &gameMode);
         deltaY = regularPath(velocityY, &gameMode);
         break;
 
-    case Path::sine:
+    case Path::Sin:
         deltaX = regularPath(velocityX, &gameMode);
         deltaY = sinPath(velocityY, time, &gameMode);
         break;
 
-    case Path::curve:
+    case Path::Curve:
         accelerationY += curvePath(positionX, positionY, &gameMode);
         deltaX = regularPath(velocityX, &gameMode);
         deltaY = regularPath(velocityY, &gameMode);

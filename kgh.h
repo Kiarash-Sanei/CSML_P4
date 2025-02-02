@@ -23,9 +23,9 @@ extern "C" float R(int velocity);
 
 enum Path
 {
-    regular,
-    sine,
-    curve
+    Regular,
+    Sin,
+    Curve
 };
 
 enum Difficulty
@@ -37,8 +37,8 @@ enum Difficulty
 
 enum Program
 {
-    cpp,
-    assembly
+    Cpp,
+    Assembly
 };
 
 typedef struct GameMode

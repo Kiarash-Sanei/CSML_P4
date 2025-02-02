@@ -490,11 +490,11 @@ bool mainMenu(GameMode *gameMode)
 
     if (sin.getCheck())
     {
-        gameMode->path = Path::sine;
+        gameMode->path = Path::Sin;
     }
     else if (curve.getCheck())
     {
-        gameMode->path = Path::curve;
+        gameMode->path = Path::Curve;
     }
 
     if (medium.getCheck())
@@ -508,7 +508,7 @@ bool mainMenu(GameMode *gameMode)
 
     if (assembly.getCheck())
     {
-        gameMode->program = Program::assembly;
+        gameMode->program = Program::Assembly;
     }
 
     return singlePlayer.getCheck();
@@ -546,13 +546,15 @@ bool game(Player *player1, Player *player2, GameMode *gameMode)
 
 float regularPath(int velocity, GameMode *gameMode)
 {
-    if (gameMode->program == Program::cpp)
+    if (gameMode->program == Program::Assembly)
     {
         return velocity / FPS;
     }
     else
     {
-        return R(velocity);
+        float result = R(velocity);
+        // printf("%f\n", result);
+        return result;
     }
 }
 
