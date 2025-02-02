@@ -29,32 +29,58 @@ bool RectangularShape::checkCollision(Vector2 mousePoint)
     return CheckCollisionPointRec(mousePoint, Rectangle{(float)positionX, (float)positionY, (float)width, (float)height});
 }
 
-Ball::Ball(GameMode gM)
-    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), gameMode(gM)
+Ball::Ball(GameMode gM, double *cT)
+    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), gameMode(gM), calculationTime(cT)
 {
     choose();
-    time = 0;
+    round = 0;
     radius = 10;
-    color = CHARCOAL;
+    color1 = STEEL_BLUE;
+    color2 = TIFFANY_BLUE;
+    color3 = SEASALT;
     reset();
 }
 
-Ball::Ball()
-    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0)
+Ball::Ball(double *cT)
+    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0), calculationTime(cT)
 {
     int random = GetRandomValue(1, 3);
     gameMode.path = (random == 1 ? Path::Regular : random == 2 ? Path::Sin
                                                                : Path::Curve);
     gameMode.difficulty = Difficulty::Easy;
-    time = 0;
+    round = 0;
     radius = 10;
-    color = CHARCOAL;
+    color1 = STEEL_BLUE;
+    color2 = TIFFANY_BLUE;
+    color3 = SEASALT;
     reset();
 }
 
 void Ball::draw()
 {
-    DrawCircle(positionX, positionY, radius, color);
+    float rotationAngle = round * 0.1f;
+    for (int i = 0; i < 6; i++)
+    {
+        float segment = i * PI / 3;
+        float startAngle = rotationAngle + segment;
+        float endAngle = rotationAngle + segment + PI / 3;
+
+        DrawCircleSector(
+            Vector2{(float)positionX, (float)positionY},
+            radius,
+            startAngle * RAD2DEG,
+            endAngle * RAD2DEG,
+            32,
+            (i % 2 == 0 ? color1 : color2));
+
+        Vector2 start = {
+            (float)positionX,
+            (float)positionY};
+        Vector2 end = {
+            (float)positionX + radius * cosf(startAngle),
+            (float)positionY + radius * sinf(startAngle)};
+        DrawLineEx(start, end, 1.0f, color3);
+    }
 }
 
 void Ball::update(Player *player1, Player *player2)
@@ -123,6 +149,7 @@ void Ball::update()
 
 void Ball::path()
 {
+    double temporaryTime = time(NULL);
     velocityX += accelerationX / FPS;
     velocityY += accelerationY / FPS;
 
@@ -138,7 +165,7 @@ void Ball::path()
 
     case Path::Sin:
         deltaX = regularPath(velocityX, &gameMode);
-        deltaY = sinPath(velocityY, time, &gameMode);
+        deltaY = sinPath(velocityY, round, &gameMode);
         break;
 
     case Path::Curve:
@@ -153,7 +180,9 @@ void Ball::path()
 
     positionX += deltaX;
     positionY += deltaY;
-    time++;
+    round++;
+
+    *calculationTime += time(NULL) - temporaryTime;
 }
 
 void Ball::collision(Paddle paddle)

@@ -14,7 +14,7 @@ bool checkLogin(TextBox *username, TextBox *password, Button *login)
         return false;
     }
 }
-bool loginMenu(Player *player)
+bool loginMenu(Player *player, double *calculationTime)
 {
     Text title("LOGIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 200);
     TextBox username(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100, "USERNAME");
@@ -26,8 +26,8 @@ bool loginMenu(Player *player)
 
     bool loginStatus = false;
 
-    Ball ball1;
-    Ball ball2;
+    Ball ball1(calculationTime);
+    Ball ball2(calculationTime);
 
     while (!WindowShouldClose() && !loginStatus)
     {
@@ -514,9 +514,9 @@ bool mainMenu(GameMode *gameMode)
     return singlePlayer.getCheck();
 }
 
-bool game(Player *player1, Player *player2, GameMode *gameMode)
+bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime)
 {
-    Ball ball(*gameMode);
+    Ball ball(*gameMode, calculationTime);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
     RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2, gameMode->numberOfPlayer == 1);
 
@@ -530,7 +530,9 @@ bool game(Player *player1, Player *player2, GameMode *gameMode)
 
         BeginDrawing();
         ClearBackground(CAROLINA_BLUE);
-        DrawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT, PANTONE);
+
+        drawLine();
+
         ball.draw();
         leftPaddle.draw();
         rightPaddle.draw();
@@ -592,4 +594,22 @@ float curvePath(int positionX, int positionY, GameMode *gameMode)
     {
         return C(positionX, positionY);
     }
+}
+
+void drawLine()
+{
+    DrawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT, PANTONE);
+    Color color = CAROLINA_BLUE;
+    int radius = 128;
+    float delta = 0.1f;
+    for (float i = radius; i > 0; i -= delta)
+    {
+        Color gradientColor = {
+            (unsigned char)fmin(color.r + (radius - i) * 0.5, 255),
+            (unsigned char)fmin(color.g + (radius - i) * 0.5, 255),
+            (unsigned char)fmin(color.b + (radius - i) * 0.5, 255),
+            color.a};
+        DrawCircle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, i, gradientColor);
+    }
+    DrawCircleLines(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, radius, PANTONE);
 }

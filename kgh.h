@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 #define CHARCOAL {47, 72, 88, 255}
 #define LAPIS_LAZULI {51, 101, 138, 255}
@@ -110,14 +111,18 @@ private:
     int accelerationX;
     int accelerationY;
     float radius;
-    Color color;
+    Color color1;
+    Color color2;
+    Color color3;
     GameMode gameMode;
-    int time;
+    int round;
+    double *calculationTime;
+
     void path();
 
 public:
-    Ball(GameMode gM);
-    Ball();
+    Ball(GameMode gM, double *cT);
+    Ball(double *cT);
     void draw();
     void update(Player *player1, Player *player2);
     void update();
@@ -225,9 +230,10 @@ bool checkMainMenuSelections(CheckBox *singlePlayer, CheckBox *multiPlayer,
                              CheckBox *regular, CheckBox *sin, CheckBox *curve,
                              CheckBox *easy, CheckBox *medium, CheckBox *hard,
                              CheckBox *cpp, CheckBox *assembly);
-bool loginMenu(Player *player);
+bool loginMenu(Player *player, double *calculationTime);
 bool mainMenu(GameMode *gameMode);
-bool game(Player *player1, Player *player2, GameMode *gameMode);
+bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime);
 float regularPath(int velocity, GameMode *gameMode);
 float sinPath(int velocity, int time, GameMode *gameMode);
 float curvePath(int positionX, int positionY, GameMode *gameMode);
+void drawLine();
