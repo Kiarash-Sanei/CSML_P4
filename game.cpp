@@ -42,7 +42,11 @@ int main()
     double executionTime = time(NULL) - temporaryTime;
 
     FILE *logFile = fopen("log.txt", "a");
-    fprintf(logFile, "Execution time is %.0f seconds.\nCalculation time while using %s is %.9f nano seconds.\n", executionTime, (gameMode.program == Program::Assembly ? "ASSEMBLY" : "C++"), calculationTime * 1000000000);
+    fprintf(logFile,
+            "Execution time is %.0f seconds.\nCalculation time while using %s is %.9f nano seconds.\n",
+            executionTime,
+            (gameMode.program == Program::Assembly ? "ASSEMBLY" : "C++"),
+            calculationTime * 1000000000);
     fclose(logFile);
 
     return 0;
