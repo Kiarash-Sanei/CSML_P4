@@ -548,7 +548,7 @@ float regularPath(int velocity, GameMode *gameMode)
 {
     if (gameMode->program == Program::Cpp)
     {
-        return velocity / FPS;
+        return velocity / (float)FPS;
     }
     else
     {

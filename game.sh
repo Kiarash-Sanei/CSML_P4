@@ -9,7 +9,7 @@ g++ game.cpp class.cpp function.cpp  R.o -o game.out -lraylib -no-pie &>/dev/nul
 
 echo "Let's play PONG!"
 
-./game.out
+./game.out &>/dev/null
 
 echo ":("
 

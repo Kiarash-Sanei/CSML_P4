@@ -1,5 +1,5 @@
 section .data
-    FPS dd 60.0    ; Define FPS as a 32-bit float with exact value
+    FPS dd 60.0    ; Define FPS as a 32-bit float
 
 section .text
     global R
@@ -7,15 +7,11 @@ section .text
         push rbp
         mov rbp, rsp
         
-        ; Convert to double precision
-        cvtsi2sd xmm0, rdi     ; Convert velocity to double
-        cvtss2sd xmm1, [FPS]   ; Convert FPS to double
+        ; Convert integer input to float
+        cvtsi2ss xmm0, edi     ; Convert velocity to float using edi (first integer argument)
         
-        ; Perform division in double precision
-        divsd xmm0, xmm1       ; Divide with double precision
-        
-        ; Convert back to single precision for return
-        cvtsd2ss xmm0, xmm0    ; Convert result back to float
+        ; Load FPS value and divide
+        divss xmm0, [rel FPS]  ; Use RIP-relative addressing for FPS
         
         leave
         ret
