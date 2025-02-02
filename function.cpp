@@ -470,31 +470,27 @@ bool mainMenu(GameMode *gameMode)
         gameMode->numberOfPlayer = 2;
     }
 
-    if (regular.getCheck())
+    if (sin.getCheck())
     {
-        gameMode->path = 1;
-    }
-    else if (sin.getCheck())
-    {
-        gameMode->path = 2;
+        gameMode->path = Path::sine;
     }
     else if (curve.getCheck())
     {
-        gameMode->path = 3;
+        gameMode->path = Path::curve;
     }
 
     if (medium.getCheck())
     {
-        gameMode->difficulty = 2;
+        gameMode->difficulty = Difficulty::Meduim;
     }
     else
     {
-        gameMode->difficulty = 3;
+        gameMode->difficulty = Difficulty::Hard;
     }
 
     if (assembly.getCheck())
     {
-        gameMode->program = 2;
+        gameMode->program = Program::ASSEMBLY;
     }
 
     return singlePlayer.getCheck();
@@ -502,14 +498,13 @@ bool mainMenu(GameMode *gameMode)
 
 bool game(Player *player1, Player *player2, GameMode *gameMode)
 {
-    double time = 0;
     Ball ball(*gameMode);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
     RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2, gameMode->numberOfPlayer == 1);
 
     while (!WindowShouldClose())
     {
-        ball.update(player1, player2, time);
+        ball.update(player1, player2);
         leftPaddle.update();
         rightPaddle.update(ball);
         ball.collision(leftPaddle);
@@ -526,7 +521,6 @@ bool game(Player *player1, Player *player2, GameMode *gameMode)
         DrawText(TextFormat("%i", player1->getScore()), 10, 40, 20, LAPIS_LAZULI);
         DrawText(TextFormat("%i", player2->getScore()), SCREEN_WIDTH - 100, 40, 20, LAPIS_LAZULI);
         EndDrawing();
-        time++;
     }
 
     return true;

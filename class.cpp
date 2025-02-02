@@ -56,6 +56,7 @@ Ball::Ball(GameMode gM)
         break;
     }
 
+    time = 0;
     radius = 10;
     color = CHARCOAL;
     reset();
@@ -64,7 +65,10 @@ Ball::Ball(GameMode gM)
 Ball::Ball()
     : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0)
 {
-    gameMode.path = GetRandomValue(1, 3);
+    int random = GetRandomValue(1, 3);
+    gameMode.path = (random == 1 ? Path::regular : random == 2 ? Path::sine
+                                                               : Path::curve);
+    time = 0;
     radius = 10;
     color = CHARCOAL;
     reset();
@@ -75,38 +79,9 @@ void Ball::draw()
     DrawCircle(positionX, positionY, radius, color);
 }
 
-void Ball::update(Player *player1, Player *player2, double time)
+void Ball::update(Player *player1, Player *player2)
 {
-    velocityX += accelerationX / FPS;
-    velocityY += accelerationY / FPS;
-
-    float deltaX;
-    float deltaY;
-
-    switch (gameMode.path)
-    {
-    case 1:
-        deltaX = regularPath(velocityX);
-        deltaY = regularPath(velocityY);
-        break;
-
-    case 2:
-        deltaX = regularPath(velocityX);
-        deltaY = sinPath(velocityY, time);
-        break;
-
-    case 3:
-        accelerationY += curvePath(positionX, positionY);
-        deltaX = regularPath(velocityX);
-        deltaY = regularPath(velocityY);
-        break;
-
-    default:
-        break;
-    }
-
-    positionX += deltaX;
-    positionY += deltaY;
+    path();
 
     if (positionX - radius < 0)
     {
@@ -132,10 +107,7 @@ void Ball::update(Player *player1, Player *player2, double time)
 
 void Ball::update()
 {
-    velocityX += accelerationX / FPS;
-    velocityY += accelerationY / FPS;
-    positionX += velocityX / FPS;
-    positionY += velocityY / FPS;
+    path();
 
     if (positionX - radius < 0)
     {
@@ -157,6 +129,41 @@ void Ball::update()
         positionY = SCREEN_HEIGHT - radius;
         velocityY *= -1;
     }
+}
+
+void Ball::path()
+{
+    velocityX += accelerationX / FPS;
+    velocityY += accelerationY / FPS;
+
+    float deltaX;
+    float deltaY;
+
+    switch (gameMode.path)
+    {
+    case Path::regular:
+        deltaX = regularPath(velocityX);
+        deltaY = regularPath(velocityY);
+        break;
+
+    case Path::sine:
+        deltaX = regularPath(velocityX);
+        deltaY = sinPath(velocityY, time);
+        break;
+
+    case Path::curve:
+        accelerationY += curvePath(positionX, positionY);
+        deltaX = regularPath(velocityX);
+        deltaY = regularPath(velocityY);
+        break;
+
+    default:
+        break;
+    }
+
+    positionX += deltaX;
+    positionY += deltaY;
+    time++;
 }
 
 void Ball::collision(Paddle paddle)

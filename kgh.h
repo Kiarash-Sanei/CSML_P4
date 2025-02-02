@@ -19,12 +19,32 @@
 #define GAME_NAME "PONG"
 #define FPS 60
 
+enum Path
+{
+    regular,
+    sine,
+    curve
+};
+
+enum Difficulty
+{
+    Easy,
+    Meduim,
+    Hard
+};
+
+enum Program
+{
+    CPP,
+    ASSEMBLY
+};
+
 typedef struct GameMode
 {
     int numberOfPlayer;
-    int path;
-    int difficulty;
-    int program;
+    Path path;
+    Difficulty difficulty;
+    Program program;
 } GameMode;
 
 class Shape
@@ -88,12 +108,14 @@ private:
     float radius;
     Color color;
     GameMode gameMode;
+    int time;
+    void path();
 
 public:
     Ball(GameMode gM);
     Ball();
     void draw();
-    void update(Player *player1, Player *player2, double time);
+    void update(Player *player1, Player *player2);
     void update();
     void collision(Paddle paddle);
     void reset();

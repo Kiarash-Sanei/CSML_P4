@@ -7,9 +7,9 @@ int main()
 
     GameMode gameMode = {
         .numberOfPlayer = 1,
-        .path = 1,
-        .difficulty = 1,
-        .program = 1};
+        .path = Path::regular,
+        .difficulty = Difficulty::Easy,
+        .program = Program::CPP};
 
     Player player1("Player1");
     Player player2("AI");
