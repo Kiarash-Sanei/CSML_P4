@@ -546,15 +546,13 @@ bool game(Player *player1, Player *player2, GameMode *gameMode)
 
 float regularPath(int velocity, GameMode *gameMode)
 {
-    if (gameMode->program == Program::Assembly)
+    if (gameMode->program == Program::Cpp)
     {
         return velocity / FPS;
     }
     else
     {
-        float result = R(velocity);
-        // printf("%f\n", result);
-        return result;
+        return R(velocity);
     }
 }
 

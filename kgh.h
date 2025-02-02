@@ -121,6 +121,8 @@ public:
     void update();
     void collision(Paddle paddle);
     void reset();
+    void choose();
+    bool conrner();
 };
 
 class RightPaddle : public Paddle

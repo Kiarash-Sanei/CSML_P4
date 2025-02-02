@@ -32,30 +32,7 @@ bool RectangularShape::checkCollision(Vector2 mousePoint)
 Ball::Ball(GameMode gM)
     : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), gameMode(gM)
 {
-    switch (gM.difficulty)
-    {
-    case Difficulty::Easy:
-        velocityX = 300;
-        velocityY = 300;
-        accelerationX = 20;
-        accelerationY = 20;
-        break;
-    case Difficulty::Meduim:
-        velocityX = 350;
-        velocityY = 350;
-        accelerationX = 30;
-        accelerationY = 30;
-        break;
-    case Difficulty::Hard:
-        velocityX = 400;
-        velocityY = 400;
-        accelerationX = 40;
-        accelerationY = 40;
-        break;
-    default:
-        break;
-    }
-
+    choose();
     time = 0;
     radius = 10;
     color = CHARCOAL;
@@ -68,6 +45,7 @@ Ball::Ball()
     int random = GetRandomValue(1, 3);
     gameMode.path = (random == 1 ? Path::Regular : random == 2 ? Path::Sin
                                                                : Path::Curve);
+    gameMode.difficulty = Difficulty::Easy;
     time = 0;
     radius = 10;
     color = CHARCOAL;
@@ -83,25 +61,31 @@ void Ball::update(Player *player1, Player *player2)
 {
     path();
 
-    if (positionX - radius < 0)
+    if (positionX - radius <= 0)
     {
         player2->updateScore(1);
         reset();
     }
-    else if (positionX + radius > SCREEN_WIDTH)
+    else if (positionX + radius >= SCREEN_WIDTH)
     {
         player1->updateScore(1);
         reset();
     }
-    if (positionY - radius < 0)
+    if (positionY - radius <= 0)
     {
         positionY = radius;
         velocityY *= -1;
     }
-    else if (positionY + radius > SCREEN_HEIGHT)
+    else if (positionY + radius >= SCREEN_HEIGHT)
     {
         positionY = SCREEN_HEIGHT - radius;
         velocityY *= -1;
+    }
+
+    if (conrner())
+    {
+        reset();
+        choose();
     }
 }
 
@@ -109,25 +93,31 @@ void Ball::update()
 {
     path();
 
-    if (positionX - radius < 0)
+    if (positionX - radius <= 0)
     {
         positionX = radius;
         velocityX *= -1;
     }
-    else if (positionX + radius > SCREEN_WIDTH)
+    else if (positionX + radius >= SCREEN_WIDTH)
     {
         positionX = SCREEN_WIDTH - radius;
         velocityX *= -1;
     }
-    if (positionY - radius < 0)
+    if (positionY - radius <= 0)
     {
         positionY = radius;
         velocityY *= -1;
     }
-    else if (positionY + radius > SCREEN_HEIGHT)
+    else if (positionY + radius >= SCREEN_HEIGHT)
     {
         positionY = SCREEN_HEIGHT - radius;
         velocityY *= -1;
+    }
+
+    if (conrner())
+    {
+        reset();
+        choose();
     }
 }
 
@@ -178,11 +168,45 @@ void Ball::collision(Paddle paddle)
 
 void Ball::reset()
 {
-    int random[2] = {-1, 1};
-
     positionX = SCREEN_WIDTH / 2;
     positionY = SCREEN_HEIGHT / 2;
+}
+
+void Ball::choose()
+{
+    switch (gameMode.difficulty)
+    {
+    case Difficulty::Easy:
+        velocityX = 300;
+        velocityY = 300;
+        accelerationX = 20;
+        accelerationY = 20;
+        break;
+    case Difficulty::Meduim:
+        velocityX = 350;
+        velocityY = 350;
+        accelerationX = 30;
+        accelerationY = 30;
+        break;
+    case Difficulty::Hard:
+        velocityX = 400;
+        velocityY = 400;
+        accelerationX = 40;
+        accelerationY = 40;
+        break;
+    default:
+        break;
+    }
+
+    int random[2] = {-1, 1};
     velocityX *= random[GetRandomValue(0, 1)];
+    velocityY *= random[GetRandomValue(0, 1)];
+}
+
+bool Ball::conrner()
+{
+    return (positionX - radius <= 0 || positionX + radius >= SCREEN_WIDTH) &&
+           (positionY - radius <= 0 || positionY + radius >= SCREEN_HEIGHT);
 }
 
 Paddle::Paddle(int posX, int posY)
