@@ -8,7 +8,8 @@ int main()
     GameMode gameMode = {
         .numberOfPlayer = 1,
         .path = 1,
-        .difficulty = 1};
+        .difficulty = 1,
+        .program = 1};
 
     Player player1("Player1");
     Player player2("AI");

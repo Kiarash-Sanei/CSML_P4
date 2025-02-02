@@ -24,6 +24,7 @@ typedef struct GameMode
     int numberOfPlayer;
     int path;
     int difficulty;
+    int program;
 } GameMode;
 
 class Shape

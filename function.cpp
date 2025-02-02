@@ -113,27 +113,32 @@ bool loginMenu(Player *player)
 
 bool mainMenu(GameMode *gameMode)
 {
-    Text title("MAIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 350);
-    Text guide("Choose the game mode:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 300);
-    Text ballPath("Choose the ball's path:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100);
-    Text difficulty("Choose game's difficulty:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100);
+    Text title("MAIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 375);
+    Text guide("Choose the game mode:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 325);
+    Text ballPath("Choose the ball's path:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 175);
+    Text difficulty("Choose game's difficulty:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25);
+    Text hotPart("Choose the language used in hot patrs:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 125);
 
-    CheckBox singlePlayer(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 200, "SINGLEPLAYER");
-    CheckBox multiPlayer(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2 - 200, "MULTIPLAYER");
+    CheckBox singlePlayer(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 250, "SINGLEPLAYER");
+    CheckBox multiPlayer(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2 - 250, "MULTIPLAYER");
     singlePlayer.setCheck(true);
     singlePlayer.setFocus(true);
 
-    CheckBox regular(SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2, "REGULAR");
-    CheckBox sin(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "SIN");
-    CheckBox curve(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT / 2, "CURVE");
+    CheckBox regular(SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 - 100, "REGULAR");
+    CheckBox sin(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100, "SIN");
+    CheckBox curve(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT / 2 - 100, "CURVE");
     regular.setCheck(true);
 
-    CheckBox easy(SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 + 200, "EASY");
-    CheckBox medium(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 200, "MEDIUM");
-    CheckBox hard(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT / 2 + 200, "HARD");
+    CheckBox easy(SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 + 50, "EASY");
+    CheckBox medium(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50, "MEDIUM");
+    CheckBox hard(SCREEN_WIDTH / 2 + 300, SCREEN_HEIGHT / 2 + 50, "HARD");
     easy.setCheck(true);
 
-    Button startGame(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 300, "Start");
+    CheckBox cpp(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 + 200, "C++");
+    CheckBox assembly(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2 + 200, "ASSEMBLY");
+    cpp.setCheck(true);
+
+    Button startGame(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 275, "Start");
 
     bool start = false;
 
@@ -179,6 +184,16 @@ bool mainMenu(GameMode *gameMode)
             else if (hard.getFocus())
             {
                 hard.setFocus(false);
+                cpp.setFocus(true);
+            }
+            else if (cpp.getFocus())
+            {
+                cpp.setFocus(false);
+                assembly.setFocus(true);
+            }
+            else if (assembly.getFocus())
+            {
+                assembly.setFocus(false);
                 startGame.setFocus(true);
             }
             else if (startGame.getFocus())
@@ -257,6 +272,22 @@ bool mainMenu(GameMode *gameMode)
                 {
                     easy.setCheck(false);
                     medium.setCheck(false);
+                }
+            }
+            else if (cpp.getFocus())
+            {
+                cpp.toggleCheck();
+                if (cpp.getCheck())
+                {
+                    assembly.setCheck(false);
+                }
+            }
+            else if (assembly.getFocus())
+            {
+                assembly.toggleCheck();
+                if (assembly.getCheck())
+                {
+                    cpp.setCheck(false);
                 }
             }
             else if (startGame.getFocus())
@@ -380,6 +411,36 @@ bool mainMenu(GameMode *gameMode)
             hard.setFocus(true);
             hard.setCheck(true);
         }
+        else if (cpp.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
+            regular.setFocus(false);
+            sin.setFocus(false);
+            curve.setFocus(false);
+            easy.setFocus(false);
+            medium.setFocus(false);
+            hard.setFocus(false);
+            cpp.setFocus(true);
+            cpp.setCheck(true);
+            assembly.setFocus(false);
+            assembly.setCheck(false);
+        }
+        else if (hard.checkCollision(mousePoint) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            singlePlayer.setFocus(false);
+            multiPlayer.setFocus(false);
+            regular.setFocus(false);
+            sin.setFocus(false);
+            curve.setFocus(false);
+            easy.setFocus(false);
+            medium.setFocus(false);
+            hard.setFocus(false);
+            cpp.setFocus(false);
+            cpp.setCheck(false);
+            assembly.setFocus(true);
+            assembly.setCheck(true);
+        }
 
         BeginDrawing();
         ClearBackground(CAROLINA_BLUE);
@@ -388,6 +449,7 @@ bool mainMenu(GameMode *gameMode)
         guide.draw();
         ballPath.draw();
         difficulty.draw();
+        hotPart.draw();
         singlePlayer.draw();
         multiPlayer.draw();
         regular.draw();
@@ -396,6 +458,8 @@ bool mainMenu(GameMode *gameMode)
         easy.draw();
         medium.draw();
         hard.draw();
+        cpp.draw();
+        assembly.draw();
         startGame.draw();
 
         EndDrawing();
@@ -426,6 +490,11 @@ bool mainMenu(GameMode *gameMode)
     else
     {
         gameMode->difficulty = 3;
+    }
+
+    if (assembly.getCheck())
+    {
+        gameMode->program = 2;
     }
 
     return singlePlayer.getCheck();
