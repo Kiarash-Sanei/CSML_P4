@@ -94,15 +94,17 @@ public:
     void draw();
     void update(Player *player1, Player *player2, double time);
     void update();
-    int getPositionY();
     void collision(Paddle paddle);
     void reset();
 };
 
 class RightPaddle : public Paddle
 {
+private:
+    bool isAI;
+
 public:
-    RightPaddle(int posX, int posY);
+    RightPaddle(int posX, int posY, bool AI);
     void draw();
     void update(Ball ball);
 };

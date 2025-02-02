@@ -159,11 +159,6 @@ void Ball::update()
     }
 }
 
-int Ball::getPositionY()
-{
-    return positionY;
-}
-
 void Ball::collision(Paddle paddle)
 {
     if (CheckCollisionCircleRec(Vector2{(float)positionX, (float)positionY},
@@ -202,8 +197,8 @@ void Paddle::limitCheck()
     }
 }
 
-RightPaddle::RightPaddle(int posX, int posY)
-    : Paddle(posX, posY)
+RightPaddle::RightPaddle(int posX, int posY, bool AI)
+    : Paddle(posX, posY), isAI(AI)
 {
     positionX -= padding;
     positionX -= width;
@@ -216,13 +211,27 @@ void RightPaddle::draw()
 
 void RightPaddle::update(Ball ball)
 {
-    if (positionY + height / 2 > ball.getPositionY())
+    if (isAI && ball.getX() > SCREEN_WIDTH / 2)
     {
-        positionY -= velocityY;
+        if (positionY + height / 2 > ball.getY())
+        {
+            positionY -= velocityY;
+        }
+        else if (positionY + height / 2 < ball.getY())
+        {
+            positionY += velocityY;
+        }
     }
-    else if (positionY + height / 2 < ball.getPositionY())
+    else
     {
-        positionY += velocityY;
+        if (IsKeyDown(KEY_UP))
+        {
+            positionY -= velocityY;
+        }
+        else if (IsKeyDown(KEY_DOWN))
+        {
+            positionY += velocityY;
+        }
     }
     limitCheck();
 }

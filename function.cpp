@@ -436,7 +436,7 @@ bool game(Player *player1, Player *player2, GameMode *gameMode)
     double time = 0;
     Ball ball(*gameMode);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
-    RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2);
+    RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2, gameMode->numberOfPlayer == 1);
 
     while (!WindowShouldClose())
     {
