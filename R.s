@@ -3,7 +3,7 @@ section .data
 
 section .text
     global R
-    R:
+    R: ; Regular(rdi -> int velocity)
         push rbp
         mov rbp, rsp
         

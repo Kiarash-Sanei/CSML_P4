@@ -20,6 +20,8 @@
 #define FPS 60
 
 extern "C" float R(int velocity);
+extern "C" float S(int velocity, int time);
+extern "C" float C(int positionX, int positionY);
 
 enum Path
 {
@@ -227,5 +229,5 @@ bool loginMenu(Player *player);
 bool mainMenu(GameMode *gameMode);
 bool game(Player *player1, Player *player2, GameMode *gameMode);
 float regularPath(int velocity, GameMode *gameMode);
-float sinPath(int velocity, double time, GameMode *gameMode);
+float sinPath(int velocity, int time, GameMode *gameMode);
 float curvePath(int positionX, int positionY, GameMode *gameMode);

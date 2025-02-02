@@ -556,26 +556,40 @@ float regularPath(int velocity, GameMode *gameMode)
     }
 }
 
-float sinPath(int velocity, double time, GameMode *gameMode)
+float sinPath(int velocity, int time, GameMode *gameMode)
 {
-    const float frequency = 0.05f;
-    float baseMovement = velocity / FPS;
-    float sineComponent = sin(frequency * time);
-    return baseMovement * sineComponent;
+    if (gameMode->program == Program::Cpp)
+    {
+        const float frequency = 0.05f;
+        float baseMovement = velocity / FPS;
+        float sineComponent = sin(frequency * time);
+        return baseMovement * sineComponent;
+    }
+    else
+    {
+        return S(velocity, time);
+    }
 }
 
 float curvePath(int positionX, int positionY, GameMode *gameMode)
 {
-    const float constant = 1000;
-    positionX -= SCREEN_WIDTH / 2;
-    positionY -= SCREEN_HEIGHT / 2;
-    float norm = positionX * positionX + positionY * positionY;
-    if (norm < 25)
+    if (gameMode->program == Program::Cpp)
     {
-        return 0;
+        const float constant = 1000;
+        positionX -= SCREEN_WIDTH / 2;
+        positionY -= SCREEN_HEIGHT / 2;
+        float norm = positionX * positionX + positionY * positionY;
+        if (norm < 25)
+        {
+            return 0;
+        }
+        else
+        {
+            return constant * positionY / norm;
+        }
     }
     else
     {
-        return constant * positionY / norm;
+        return C(positionX, positionY);
     }
 }
