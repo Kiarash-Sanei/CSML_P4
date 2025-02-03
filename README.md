@@ -14,17 +14,30 @@ This project demonstrates the integration of assembly language optimizations in 
 
 ### Assembly Integration
 
-- `R.s`, `S.s`, and `C.s` contain optimized assembly routines
+- Assembly routines optimize critical operations:
+  - `SE.s`, `EA.s`, `SA.s` - Core assembly optimizations
+  - `EX.s`, `EY.s` - Additional performance-critical routines
+  - `R.s`, `S.s`, `C.s`, `G.s` - contain optimized assembly routines
 - Hot paths identified and reimplemented in assembly for maximum performance
 - Direct integration with C++ codebase through proper calling conventions
 
 ### Project Structure
 
-- `class.cpp` - Core C++ implementations
-- `function.cpp` - Supporting functions
-- `game.cpp` - Main game logic
-- `kgh.h` - Header definitions
-- `S.s`, `R.s`, `C.s` - Assembly optimized routines
+- `CPP/` directory:
+  - `game.cpp` - Main game logic
+  - `kgh.h` - Header definitions
+  - `class.cpp` - Core C++ implementations
+  - `function.cpp` - Supporting functions
+- `ASM/` directory:
+  - `R.s` - Regular
+  - `S.s` - SinPath
+  - `C.s` - CurvePath
+  - `G.s` - Gradient
+  - `SE.s` - Segment
+  - `SA.s` - StartAngle
+  - `EA.s` - EndAngle
+  - `EX.s` - EndX
+  - `EY.s` - EndY
 - `game.sh` - Build/run script
 
 ## Performance Highlights

@@ -5,7 +5,7 @@ section .data
 
 section .text
     global G
-    G:  ; G(rdi -> color component, xmm0 -> i)
+    G:  ; Gradient(rdi -> color component, xmm0 -> i)
         push rbp
         mov rbp, rsp
         
