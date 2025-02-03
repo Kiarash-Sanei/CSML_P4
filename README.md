@@ -44,7 +44,6 @@ This project demonstrates the integration of assembly language optimizations in 
 
 - Assembly-optimized sections show significant performance improvements in:
   - Critical game calculations
-  - Memory operations
   - Time-sensitive computations
 
 ## Building and Running
