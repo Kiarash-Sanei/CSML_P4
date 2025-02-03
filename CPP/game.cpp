@@ -14,7 +14,7 @@ int main()
         .numberOfPlayer = 1,
         .path = Path::Regular,
         .difficulty = Difficulty::Easy,
-        .program = Program::Cpp};
+        .program = Program::Assembly};
 
     Player player1("Player1");
     Player player2("AI");
@@ -45,7 +45,7 @@ int main()
     fprintf(logFile,
             "Execution time is %.0f seconds.\nCalculation time while using %s is %.9f nano seconds.\n",
             executionTime,
-            (gameMode.program == Program::Assembly ? "ASSEMBLY" : "C++"),
+            (gameMode.program == Program::Cpp ? "C++" : "ASSEMBLY"),
             calculationTime * 1000000000);
     fclose(logFile);
 

@@ -23,6 +23,12 @@
 extern "C" float R(int velocity);
 extern "C" float S(int velocity, int time);
 extern "C" float C(int positionX, int positionY);
+extern "C" int G(int color, float i);
+extern "C" float SE(int i);
+extern "C" float SA(float rotationAngle, float segment);
+extern "C" float EA(float rotationAngle, float segment);
+extern "C" float EX(float positionX, float radius, float startAngle);
+extern "C" float EY(float positionY, float radius, float startAngle);
 
 enum Path
 {
@@ -236,4 +242,4 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
 float regularPath(int velocity, GameMode *gameMode);
 float sinPath(int velocity, int time, GameMode *gameMode);
 float curvePath(int positionX, int positionY, GameMode *gameMode);
-void drawLine();
+void drawLine(GameMode *gameMode, double *calculationTime);

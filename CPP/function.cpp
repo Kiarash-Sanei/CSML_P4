@@ -531,7 +531,7 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
         BeginDrawing();
         ClearBackground(CAROLINA_BLUE);
 
-        drawLine();
+        drawLine(gameMode, calculationTime);
 
         ball.draw();
         leftPaddle.draw();
@@ -596,20 +596,39 @@ float curvePath(int positionX, int positionY, GameMode *gameMode)
     }
 }
 
-void drawLine()
+void drawLine(GameMode *gameMode, double *calculationTime)
 {
     DrawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT, PANTONE);
     Color color = CAROLINA_BLUE;
     int radius = 128;
     float delta = 0.1f;
+    
+    double temporaryTime = time(NULL);
+
     for (float i = radius; i > 0; i -= delta)
     {
-        Color gradientColor = {
-            (unsigned char)fmin(color.r + (radius - i) * 0.5, 255),
-            (unsigned char)fmin(color.g + (radius - i) * 0.5, 255),
-            (unsigned char)fmin(color.b + (radius - i) * 0.5, 255),
-            color.a};
+        Color gradientColor;
+        if (gameMode->program == Program::Cpp)
+        {
+            gradientColor = {
+                (unsigned char)fmin(color.r + (radius - i) * 0.5, 255),
+                (unsigned char)fmin(color.g + (radius - i) * 0.5, 255),
+                (unsigned char)fmin(color.b + (radius - i) * 0.5, 255),
+                color.a};
+        }
+        else
+        {
+            gradientColor = {
+                (unsigned char)G(color.r, i),
+                (unsigned char)G(color.g, i),
+                (unsigned char)G(color.b, i),
+                color.a};
+        }
+
         DrawCircle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, i, gradientColor);
     }
+
+    *calculationTime += time(NULL) - temporaryTime;
+
     DrawCircleLines(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, radius, PANTONE);
 }

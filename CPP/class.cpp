@@ -59,11 +59,36 @@ Ball::Ball(double *cT)
 void Ball::draw()
 {
     float rotationAngle = round * 0.1f;
+
+    double temporaryTime = time(NULL);
+
     for (int i = 0; i < 6; i++)
     {
-        float segment = i * PI / 3;
-        float startAngle = rotationAngle + segment;
-        float endAngle = rotationAngle + segment + PI / 3;
+        float segment;
+        float startAngle;
+        float endAngle;
+        float endX;
+        float endY;
+
+        if (gameMode.program == Program::Cpp)
+        {
+            segment = i * PI / 3;
+            startAngle = rotationAngle + segment;
+            endAngle = rotationAngle + segment + PI / 3;
+            endX = (float)positionX + radius * cos(startAngle);
+            endY = (float)positionY + radius * sin(startAngle);
+        }
+        else
+        {
+            segment = SE(i);
+            startAngle = SA(rotationAngle, segment);
+            endAngle = EA(rotationAngle, segment);
+            endX = EX(positionX, radius, startAngle);
+            endY = EY(positionY, radius, startAngle);
+        }
+
+        Vector2 start = {(float)positionX, (float)positionY};
+        Vector2 end = {endX, endY};
 
         DrawCircleSector(
             Vector2{(float)positionX, (float)positionY},
@@ -72,15 +97,10 @@ void Ball::draw()
             endAngle * RAD2DEG,
             32,
             (i % 2 == 0 ? color1 : color2));
-
-        Vector2 start = {
-            (float)positionX,
-            (float)positionY};
-        Vector2 end = {
-            (float)positionX + radius * cosf(startAngle),
-            (float)positionY + radius * sinf(startAngle)};
         DrawLineEx(start, end, 1.0f, color3);
     }
+
+    *calculationTime += time(NULL) - temporaryTime;
 }
 
 void Ball::update(Player *player1, Player *player2)
