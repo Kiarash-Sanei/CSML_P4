@@ -520,14 +520,17 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
     Ball ball(*gameMode, calculationTime);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
     RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2, gameMode->numberOfPlayer == 1);
+    float time = 0;
 
     while (!WindowShouldClose())
     {
+        time -= GetTime();
         ball.update(player1, player2);
         leftPaddle.update();
         rightPaddle.update(ball);
         ball.collision(leftPaddle);
         ball.collision(rightPaddle);
+        time += GetTime();
 
         elapsedTime += GetFrameTime();
 
@@ -549,7 +552,8 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
         EndDrawing();
     }
 
-    *gameTime+=elapsedTime;
+    *gameTime += elapsedTime;
+    *calculationTime += time;
 
     return true;
 }

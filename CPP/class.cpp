@@ -60,8 +60,6 @@ void Ball::draw()
 {
     float rotationAngle = round * 0.1f;
 
-    double temporaryTime = time(NULL);
-
     for (int i = 0; i < 6; i++)
     {
         float segment;
@@ -99,8 +97,6 @@ void Ball::draw()
             (i % 2 == 0 ? color1 : color2));
         DrawLineEx(start, end, 1.0f, color3);
     }
-
-    *calculationTime += time(NULL) - temporaryTime;
 }
 
 void Ball::update(Player *player1, Player *player2)
@@ -169,7 +165,6 @@ void Ball::update()
 
 void Ball::path()
 {
-    double temporaryTime = time(NULL);
     velocityX += accelerationX / FPS;
     velocityY += accelerationY / FPS;
 
@@ -201,8 +196,6 @@ void Ball::path()
     positionX += deltaX;
     positionY += deltaY;
     round++;
-
-    *calculationTime += time(NULL) - temporaryTime;
 }
 
 void Ball::collision(Paddle paddle)

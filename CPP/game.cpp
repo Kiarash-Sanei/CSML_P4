@@ -50,7 +50,7 @@ int main()
             (gameMode.program == Program::Cpp ? "C++" : "ASSEMBLY"),
             (gameMode.path == Path::Curve ? "curve" : gameMode.path == Path::Regular ? "regular"
                                                                                      : "sin"),
-            calculationTime * 1000000000);
+            calculationTime);
     fclose(logFile);
 
     return 0;
