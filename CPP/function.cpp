@@ -514,8 +514,9 @@ bool mainMenu(GameMode *gameMode)
     return singlePlayer.getCheck();
 }
 
-bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime)
+bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime, double *gameTime)
 {
+    float elapsedTime = 0.0f;
     Ball ball(*gameMode, calculationTime);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
     RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2, gameMode->numberOfPlayer == 1);
@@ -527,6 +528,8 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
         rightPaddle.update(ball);
         ball.collision(leftPaddle);
         ball.collision(rightPaddle);
+
+        elapsedTime += GetFrameTime();
 
         BeginDrawing();
         ClearBackground(MATRIX_BLACK);
@@ -540,8 +543,13 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
         DrawText(player2->getName(), SCREEN_WIDTH - 100, 10, 20, DARK_GREEN);
         DrawText(TextFormat("%i", player1->getScore()), 10, 40, 20, DARK_GREEN);
         DrawText(TextFormat("%i", player2->getScore()), SCREEN_WIDTH - 100, 40, 20, DARK_GREEN);
+
+        DrawText(TextFormat("Time:\n%.2f", elapsedTime), 100, 10, 20, DARK_GREEN);
+
         EndDrawing();
     }
+
+    *gameTime+=elapsedTime;
 
     return true;
 }

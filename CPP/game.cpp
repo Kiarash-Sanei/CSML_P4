@@ -2,6 +2,7 @@
 
 double executionTime = 0;
 double calculationTime = 0;
+double gameTime = 0;
 
 int main()
 {
@@ -34,7 +35,7 @@ int main()
 
     if (loginStatus)
     {
-        game(&player1, &player2, &gameMode, &calculationTime);
+        game(&player1, &player2, &gameMode, &calculationTime, &gameTime);
     }
 
     CloseWindow();
@@ -43,9 +44,12 @@ int main()
 
     FILE *logFile = fopen("log.txt", "a");
     fprintf(logFile,
-            "Execution time is %.0f seconds.\nCalculation time while using %s is %.9f nano seconds.\n",
+            "Execution time is %.0f seconds.\nGame time is %.0f.\nCalculation time while using %s in mode %s is %.3f nanoseconds.\n\n",
             executionTime,
+            gameTime,
             (gameMode.program == Program::Cpp ? "C++" : "ASSEMBLY"),
+            (gameMode.path == Path::Curve ? "curve" : gameMode.path == Path::Regular ? "regular"
+                                                                                     : "sin"),
             calculationTime * 1000000000);
     fclose(logFile);
 

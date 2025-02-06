@@ -4,11 +4,11 @@
 #include <math.h>
 #include <time.h>
 
-#define MATRIX_BLACK {0, 0, 0, 255}       
-#define NEON_GREEN {57, 255, 20, 255}     
-#define DARK_GREEN {0, 102, 0, 255}       
-#define MEDIUM_GREEN {0, 153, 0, 255}     
-#define LIGHT_GREEN {144, 238, 144, 255}  
+#define MATRIX_BLACK {0, 0, 0, 255}
+#define NEON_GREEN {57, 255, 20, 255}
+#define DARK_GREEN {0, 102, 0, 255}
+#define MEDIUM_GREEN {0, 153, 0, 255}
+#define LIGHT_GREEN {144, 238, 144, 255}
 #define TERMINAL_GREEN {46, 204, 64, 255}
 
 #define SCREEN_WIDTH 1280
@@ -234,7 +234,7 @@ bool checkMainMenuSelections(CheckBox *singlePlayer, CheckBox *multiPlayer,
                              CheckBox *cpp, CheckBox *assembly);
 bool loginMenu(Player *player, double *calculationTime);
 bool mainMenu(GameMode *gameMode);
-bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime);
+bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime, double *gameTime);
 float regularPath(int velocity, GameMode *gameMode);
 float sinPath(int velocity, int time, GameMode *gameMode);
 float curvePath(int positionX, int positionY, GameMode *gameMode);
