@@ -4,16 +4,12 @@
 #include <math.h>
 #include <time.h>
 
-#define CHARCOAL {47, 72, 88, 255}
-#define LAPIS_LAZULI {51, 101, 138, 255}
-#define CAROLINA_BLUE {134, 187, 216, 255}
-#define HUNYADI_YELLOW {246, 174, 45, 255}
-#define PANTONE {242, 100, 25, 255}
-#define PALE_AZURE {99, 210, 255, 255}
-#define STEEL_BLUE {32, 129, 195, 255}
-#define TIFFANY_BLUE {120, 213, 215, 255}
-#define ASH_GRAY {190, 216, 212, 255}
-#define SEASALT {247, 249, 249, 255}
+#define MATRIX_BLACK {0, 0, 0, 255}       
+#define NEON_GREEN {57, 255, 20, 255}     
+#define DARK_GREEN {0, 102, 0, 255}       
+#define MEDIUM_GREEN {0, 153, 0, 255}     
+#define LIGHT_GREEN {144, 238, 144, 255}  
+#define TERMINAL_GREEN {46, 204, 64, 255}
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 800

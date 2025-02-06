@@ -16,7 +16,7 @@ bool checkLogin(TextBox *username, TextBox *password, Button *login)
 }
 bool loginMenu(Player *player, double *calculationTime)
 {
-    Text title("LOGIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 200);
+    Text title("LOGIN MENU", NEON_GREEN, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 200);
     TextBox username(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 100, "USERNAME");
     TextBox password(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, "PASSWORD", true);
     Button login(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 100, "Login");
@@ -93,7 +93,7 @@ bool loginMenu(Player *player, double *calculationTime)
         }
 
         BeginDrawing();
-        ClearBackground(ASH_GRAY);
+        ClearBackground(MATRIX_BLACK);
         ball1.update();
         ball1.draw();
         ball2.update();
@@ -125,11 +125,11 @@ bool checkMainMenuSelections(CheckBox *singlePlayer, CheckBox *multiPlayer,
 
 bool mainMenu(GameMode *gameMode)
 {
-    Text title("MAIN MENU", PANTONE, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 375);
-    Text guide("Choose the game mode:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 325);
-    Text ballPath("Choose the ball's path:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 175);
-    Text difficulty("Choose game's difficulty:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25);
-    Text hotPart("Choose the language used in hot patrs:", LAPIS_LAZULI, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 125);
+    Text title("MAIN MENU", NEON_GREEN, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 375);
+    Text guide("Choose the game mode:", TERMINAL_GREEN, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 325);
+    Text ballPath("Choose the ball's path:", TERMINAL_GREEN, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 175);
+    Text difficulty("Choose game's difficulty:", TERMINAL_GREEN, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 25);
+    Text hotPart("Choose the language used in hot patrs:", TERMINAL_GREEN, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 125);
 
     CheckBox singlePlayer(SCREEN_WIDTH / 2 - 200, SCREEN_HEIGHT / 2 - 250, "SINGLEPLAYER");
     CheckBox multiPlayer(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2 - 250, "MULTIPLAYER");
@@ -461,7 +461,7 @@ bool mainMenu(GameMode *gameMode)
         }
 
         BeginDrawing();
-        ClearBackground(CAROLINA_BLUE);
+        ClearBackground(MATRIX_BLACK);
 
         title.draw();
         guide.draw();
@@ -506,9 +506,9 @@ bool mainMenu(GameMode *gameMode)
         gameMode->difficulty = Difficulty::Hard;
     }
 
-    if (assembly.getCheck())
+    if (cpp.getCheck())
     {
-        gameMode->program = Program::Assembly;
+        gameMode->program = Program::Cpp;
     }
 
     return singlePlayer.getCheck();
@@ -529,17 +529,17 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
         ball.collision(rightPaddle);
 
         BeginDrawing();
-        ClearBackground(CAROLINA_BLUE);
+        ClearBackground(MATRIX_BLACK);
 
         drawLine(gameMode, calculationTime);
 
         ball.draw();
         leftPaddle.draw();
         rightPaddle.draw();
-        DrawText(player1->getName(), 10, 10, 20, LAPIS_LAZULI);
-        DrawText(player2->getName(), SCREEN_WIDTH - 100, 10, 20, LAPIS_LAZULI);
-        DrawText(TextFormat("%i", player1->getScore()), 10, 40, 20, LAPIS_LAZULI);
-        DrawText(TextFormat("%i", player2->getScore()), SCREEN_WIDTH - 100, 40, 20, LAPIS_LAZULI);
+        DrawText(player1->getName(), 10, 10, 20, DARK_GREEN);
+        DrawText(player2->getName(), SCREEN_WIDTH - 100, 10, 20, DARK_GREEN);
+        DrawText(TextFormat("%i", player1->getScore()), 10, 40, 20, DARK_GREEN);
+        DrawText(TextFormat("%i", player2->getScore()), SCREEN_WIDTH - 100, 40, 20, DARK_GREEN);
         EndDrawing();
     }
 
@@ -598,11 +598,11 @@ float curvePath(int positionX, int positionY, GameMode *gameMode)
 
 void drawLine(GameMode *gameMode, double *calculationTime)
 {
-    DrawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT, PANTONE);
-    Color color = CAROLINA_BLUE;
+    DrawLine(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT, NEON_GREEN);
+    Color color = MATRIX_BLACK;
     int radius = 128;
     float delta = 0.1f;
-    
+
     double temporaryTime = time(NULL);
 
     for (float i = radius; i > 0; i -= delta)
@@ -630,5 +630,5 @@ void drawLine(GameMode *gameMode, double *calculationTime)
 
     *calculationTime += time(NULL) - temporaryTime;
 
-    DrawCircleLines(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, radius, PANTONE);
+    DrawCircleLines(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, radius, NEON_GREEN);
 }

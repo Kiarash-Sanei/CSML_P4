@@ -35,9 +35,9 @@ Ball::Ball(GameMode gM, double *cT)
     choose();
     round = 0;
     radius = 10;
-    color1 = STEEL_BLUE;
-    color2 = TIFFANY_BLUE;
-    color3 = SEASALT;
+    color1 = NEON_GREEN;
+    color2 = TERMINAL_GREEN;
+    color3 = LIGHT_GREEN;
     reset();
 }
 
@@ -50,9 +50,9 @@ Ball::Ball(double *cT)
     gameMode.difficulty = Difficulty::Easy;
     round = 0;
     radius = 10;
-    color1 = STEEL_BLUE;
-    color2 = TIFFANY_BLUE;
-    color3 = SEASALT;
+    color1 = NEON_GREEN;
+    color2 = TERMINAL_GREEN;
+    color3 = LIGHT_GREEN;
     reset();
 }
 
@@ -262,7 +262,7 @@ Paddle::Paddle(int posX, int posY)
     : RectangularShape(posX, posY - 50, 20, 100), velocityY(5), accelerationY(0)
 {
     padding = 5;
-    color = HUNYADI_YELLOW;
+    color = NEON_GREEN;
 }
 
 void Paddle::limitCheck()
@@ -385,8 +385,8 @@ bool Clickable::getFocus()
 
 TextBox::TextBox(int posX, int posY, const char *titleName, bool passwordStatus)
     : RectangularShape(posX, posY, 200, 30),
-      Clickable(STEEL_BLUE, PALE_AZURE),
-      fill(SEASALT), textColor(TIFFANY_BLUE), length(0), isPassword(passwordStatus)
+      Clickable(TERMINAL_GREEN, DARK_GREEN),
+      fill(MATRIX_BLACK), textColor(NEON_GREEN), length(0), isPassword(passwordStatus)
 {
     strcpy(title, titleName);
     text[0] = '\0';
@@ -444,8 +444,8 @@ void TextBox::draw()
 
 Button::Button(int posX, int posY, const char *titleName)
     : RectangularShape(posX, posY, 100, 30),
-      Clickable(STEEL_BLUE, PALE_AZURE),
-      fill(HUNYADI_YELLOW), textColor(TIFFANY_BLUE)
+      Clickable(TERMINAL_GREEN, DARK_GREEN),
+      fill(DARK_GREEN), textColor(NEON_GREEN)
 {
     strcpy(title, titleName);
 }
@@ -476,10 +476,10 @@ void Text::updateText(char *txt)
 
 CheckBox::CheckBox(int posX, int posY, const char *titleName)
     : RectangularShape(posX, posY, 30, 30),
-      Clickable(STEEL_BLUE, PALE_AZURE),
-      unChecked(ASH_GRAY),
-      checked(PANTONE),
-      textColor(TIFFANY_BLUE),
+      Clickable(TERMINAL_GREEN, DARK_GREEN),
+      unChecked(DARK_GREEN),
+      checked(NEON_GREEN),
+      textColor(NEON_GREEN),
       isChecked(false)
 {
     strcpy(title, titleName);
