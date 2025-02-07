@@ -516,6 +516,11 @@ bool mainMenu(GameMode *gameMode)
 
 bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime, double *gameTime)
 {
+    InitAudioDevice();
+    Music music = LoadMusicStream("Stromae_Ma_Meilleure_Ennemie_from_the_series_Arcane_League_of.mp3");
+    SetMusicVolume(music, 1);
+    PlayMusicStream(music);
+
     float elapsedTime = 0.0f;
     Ball ball(*gameMode);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
@@ -524,6 +529,8 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
 
     while (!WindowShouldClose())
     {
+        UpdateMusicStream(music);
+
         time -= GetTime();
         ball.update(player1, player2);
         leftPaddle.update();
@@ -551,6 +558,9 @@ bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculat
 
         EndDrawing();
     }
+
+    UnloadMusicStream(music);
+    CloseAudioDevice();
 
     *gameTime += elapsedTime;
     *calculationTime += time;

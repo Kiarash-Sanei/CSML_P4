@@ -44,7 +44,7 @@ int main()
 
     FILE *logFile = fopen("log.txt", "a");
     fprintf(logFile,
-            "Execution time is %.0f seconds.\nGame time is %.0f.\nCalculation time while using %s in mode %s is %.3f nanoseconds.\n\n",
+            "Execution time is %.0f seconds.\nGame time is %.0f.\nCalculation time while using %s in mode %s is %.3f seconds.\n\n",
             executionTime,
             gameTime,
             (gameMode.program == Program::Cpp ? "C++" : "ASSEMBLY"),
