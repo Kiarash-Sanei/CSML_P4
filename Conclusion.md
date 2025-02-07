@@ -51,7 +51,7 @@ When use run `game.sh` the Assembly codes are assembled to object files. Then th
 As you can see in log.old.txt, in regular path using Assembly significantly improve our speed. So, in this case we were successfully achieve the purpose of our project.
 
 ## Sinusodial Path
-Furthermore in sinusodial path using Assembly takes much less time. As we know the is a part for some special arithmatics in CPU and the `fsin` in `S.s` use that part and improve the speed.
+Furthermore in sinusodial path using Assembly takes much less time. As we know the is a part for some special arithmatics in FPU (Floating-Point Unit) and the `fsin` in `S.s` use that part and improve the speed.
 
 ## Curve Path
 At the end in Curve pass we can see that using Assembly actually improve our code. In the curve pass we have the more calculations than Regular path and we don't have a special unit to do them (unlike the sinusodial path).
