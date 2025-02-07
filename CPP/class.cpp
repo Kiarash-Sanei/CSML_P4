@@ -29,8 +29,8 @@ bool RectangularShape::checkCollision(Vector2 mousePoint)
     return CheckCollisionPointRec(mousePoint, Rectangle{(float)positionX, (float)positionY, (float)width, (float)height});
 }
 
-Ball::Ball(GameMode gM, double *cT)
-    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), gameMode(gM), calculationTime(cT)
+Ball::Ball(GameMode gM)
+    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), gameMode(gM)
 {
     choose();
     round = 0;
@@ -41,8 +41,8 @@ Ball::Ball(GameMode gM, double *cT)
     reset();
 }
 
-Ball::Ball(double *cT)
-    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0), calculationTime(cT)
+Ball::Ball()
+    : Shape(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), velocityX(300), velocityY(300), accelerationX(0), accelerationY(0)
 {
     int random = GetRandomValue(1, 3);
     gameMode.path = (random == 1 ? Path::Regular : random == 2 ? Path::Sin

@@ -118,13 +118,12 @@ private:
     Color color3;
     GameMode gameMode;
     int round;
-    double *calculationTime;
 
     void path();
 
 public:
-    Ball(GameMode gM, double *cT);
-    Ball(double *cT);
+    Ball(GameMode gM);
+    Ball();
     void draw();
     void update(Player *player1, Player *player2);
     void update();

@@ -26,8 +26,8 @@ bool loginMenu(Player *player, double *calculationTime)
 
     bool loginStatus = false;
 
-    Ball ball1(calculationTime);
-    Ball ball2(calculationTime);
+    Ball ball1;
+    Ball ball2;
 
     while (!WindowShouldClose() && !loginStatus)
     {
@@ -517,7 +517,7 @@ bool mainMenu(GameMode *gameMode)
 bool game(Player *player1, Player *player2, GameMode *gameMode, double *calculationTime, double *gameTime)
 {
     float elapsedTime = 0.0f;
-    Ball ball(*gameMode, calculationTime);
+    Ball ball(*gameMode);
     LeftPaddle leftPaddle(0, SCREEN_HEIGHT / 2);
     RightPaddle rightPaddle(SCREEN_WIDTH, SCREEN_HEIGHT / 2, gameMode->numberOfPlayer == 1);
     float time = 0;
